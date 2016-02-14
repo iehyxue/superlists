@@ -26,24 +26,43 @@ class NewVisitorTest(unittest.TestCase):
             'Enter a to-do item'
         )
 
-        #input "buy peacock feathers"
+        # input "buy peacock feathers"
         inputbox.send_keys('Buy peacock feathers')
 
-        #press enter,and the page reflash
-        #list show "1\buy peacock feathers"
+        # press enter,and the page reflash
+        # list show "1\buy peacock feathers"
         inputbox.send_keys(Keys.ENTER)
 
+        # import time
+        # time.sleep(10)
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(row.text == '1:Buy peacock feathers' for row in rows)
+            any(row.text == '1:Buy peacock feathers' for row in rows),
+            "New to-do item did not appear in table -- its text was:\n%s" % (
+                table.text,
+            )
         )
 
         # appear text block on page,can input other items
         # she input "use peacock feathers to make a fly"
-        self.fail('Finish the text!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Use peacock feathers to make a fly')
+        inputbox.send_keys(Keys.ENTER)
 
         # the page reflash again and show these two items
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1:Buy peacock feathers', [row.text for row in rows])
+        self.assertIn(
+            '2:Use peacock feathers to make a fly',
+            [row.text for row in rows]
+        )
+
+        #she want to know weather this page can remember her list
+        #she sawthis website generate a url
+        #on the page there are some text describe this function
+        self.fail('Finish the text!')
 if __name__=='__main__':
      unittest.main(warnings='ignore')
 
